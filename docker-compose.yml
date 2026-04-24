@@ -1,0 +1,59 @@
+services:
+  db:
+    image: postgres:16
+    container_name: cmms_postgres
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - cmms_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cmms_user -d cmms_dev"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+    container_name: cmms_backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    networks:
+      - cmms_net
+    depends_on:
+      db:
+        condition: service_healthy
+    command: python manage.py runserver 0.0.0.0:8000
+
+  flet:
+    build:
+      context: ./flet_client
+    container_name: cmms_flet
+    restart: unless-stopped
+    volumes:
+      - ./flet_client:/app
+    ports:
+      - "8550:8550"
+    networks:
+      - cmms_net
+    depends_on:
+      - backend
+    command: flet run main.py --web --host 0.0.0.0 --port 8550
+
+volumes:
+  postgres_data:
+
+networks:
+  cmms_net:
+    driver: bridge
