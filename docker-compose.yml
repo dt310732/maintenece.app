@@ -49,7 +49,7 @@ services:
       - cmms_net
     depends_on:
       - backend
-    command: flet run main.py --web --host 0.0.0.0 --port 8550
+    command: flet run --web --host 0.0.0.0 --port 8550 main.py
 
 volumes:
   postgres_data:
