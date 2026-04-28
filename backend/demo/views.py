@@ -43,6 +43,7 @@ def messages(request: HttpRequest) -> JsonResponse:
                 status=400,
             )
         
+        # text-pole z modelu Message i text-z jsona 
         message = Message.objects.create(text=text)
 
         return JsonResponse(
