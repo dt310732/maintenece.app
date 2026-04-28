@@ -3,4 +3,5 @@ from . import views
 
 urlpatterns = [
     path("ping/", views.ping),
+    path("messages/", views.messages),
 ]
