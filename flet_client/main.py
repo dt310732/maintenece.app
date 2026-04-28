@@ -1,19 +1,55 @@
 import flet as ft
+import os 
+import requests
 
+API_BASE_URL = os.environ.get(
+    "API_BASE_URL",
+).rstrip("/")
 
 def main(page: ft.Page):
-    page.title = "CMMS Dev"
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    page.title = "Django + Flet Demo"
+    page.window.height = 600
+    page.window.width = 700
 
-    page.add(
-        ft.Column(
-            controls=[
-                ft.Text("CMMS Dev działa", size=28, weight=ft.FontWeight.BOLD),
-                ft.Text("Flet client uruchomiony w Dockerze"),
-            ],
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-        )
+    input_text = ft.TextField(
+        label="Wpisz wiadomość",
+        autofocus=True,
     )
+
+    status_text = ft.Text("")
+    messages_column = ft.Column(spacing=8)
+
+    def load_messages():
+        messages_column.controls.clear()
+
+        try:
+            response = requests.get(
+                f"{API_BASE_URL}/messages/",
+                timeout=5
+            )
+            response.raise_for_status()
+
+            messages = response.json()
+
+            if not messages:
+                messages_column.controls.append(
+                    ft.Text("Brak wiadomości w bazie.")
+                )
+                return
+            
+            for message in messages:
+                messages_column.controls.append(
+                    ft.Text(
+                        f"{message['id']}. {message['text']}"
+                        f"({messages['created_at']})"
+                    )
+                )
+        except requests.RequestException as error:
+            messages_column.controls.append(
+                ft.Text(f"Błąd pobierania danych: {error}")
+            )
+        
+
 
 
 ft.app(target=main, view=ft.WEB_BROWSER)
