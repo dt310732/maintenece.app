@@ -50,6 +50,8 @@ services:
     depends_on:
       - backend
     command: flet run --web --host 0.0.0.0 --port 8550 main.py
+    environment:
+      API_BASE_URL: http://backend:8000/api/demo    
 
 volumes:
   postgres_data:
