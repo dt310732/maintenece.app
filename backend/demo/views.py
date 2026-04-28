@@ -25,6 +25,34 @@ def messages(request: HttpRequest) -> JsonResponse:
         ]
 
         return JsonResponse(data, safe=False)
+    
+    if request.method == "POST":
+        try:
+            body = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse(
+                {"error": "Involid Json"},
+                status=400,
+            )
+        
+        text = body.get("text", "").strip()
+
+        if not text:
+            return JsonResponse(
+                {"error": "Field 'text' is required"},
+                status=400,
+            )
+        
+        message = Message.objects.create(text=text)
+
+        return JsonResponse(
+            {
+                "id": message.id,
+                "text": message.text,
+                "created_at": message.created_at.isoformat(),
+            }, status = 201,
+        )
+    
     return JsonResponse(
         {"error": "Method not allowed"},
         status=405,
