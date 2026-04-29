@@ -41,7 +41,7 @@ def main(page: ft.Page):
                 messages_column.controls.append(
                     ft.Text(
                         f"{message['id']}. {message['text']}"
-                        f"({messages['created_at']})"
+                        f"({message['created_at']})"
                     )
                 )
         except requests.RequestException as error:
