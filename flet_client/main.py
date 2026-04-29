@@ -56,6 +56,7 @@ def main(page: ft.Page):
 
     def clear_input(e):
         input_text.value = ""
+        page.update()
 
     def send_message(e):
         text = input_text.value.strip()
