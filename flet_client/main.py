@@ -48,7 +48,12 @@ def main(page: ft.Page):
             messages_column.controls.append(
                 ft.Text(f"Błąd pobierania danych: {error}")
             )
-        
+    page.add(
+        ft.Text("Django + Flet Demo", size=24, weight=ft.FontWeight.BOLD),
+        input_text,
+        status_text,
+        messages_column,
+    )  
     load_messages()
     page.update()
 
