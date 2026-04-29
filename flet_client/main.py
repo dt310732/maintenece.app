@@ -49,7 +49,8 @@ def main(page: ft.Page):
                 ft.Text(f"Błąd pobierania danych: {error}")
             )
         
-
+    load_messages()
+    page.update()
 
 
 ft.app(target=main, view=ft.WEB_BROWSER)
