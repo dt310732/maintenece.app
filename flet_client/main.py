@@ -78,7 +78,7 @@ def main(page: ft.Page):
 
             load_messages()
         except requests.RequestException as error:
-            status_text.value = f'{Błąd zapisu {error}}'
+            status_text.value = f'Błąd zapisu: {error}'
         
         page.update()
 
