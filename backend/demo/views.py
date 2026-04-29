@@ -19,7 +19,7 @@ def messages(request: HttpRequest) -> JsonResponse:
             {
                 "id": message.id,
                 "text": message.text,
-                "created_ad": message.created_at.isoformat(),
+                "created_at": message.created_at.isoformat(),
             }
             for message in messages_qs
         ]
