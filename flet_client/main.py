@@ -98,6 +98,7 @@ def main(page: ft.Page):
         messages_column,
     )  
     
+    load_messages()
     page.update()
 
 ft.app(target=main)
