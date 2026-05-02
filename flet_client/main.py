@@ -98,7 +98,7 @@ def main(page: ft.Page):
     def delete_message(message_id: int) -> None:
         try:
             response = requests.delete(
-                f"{API_BASE_URL}/messages/{message_id}",
+                f"{API_BASE_URL}/messages/{message_id}/",
                 timeout=5
             )
             response.raise_for_status()
