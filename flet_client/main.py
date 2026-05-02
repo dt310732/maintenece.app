@@ -41,9 +41,18 @@ def main(page: ft.Page):
             
             for index,message in enumerate(messages, start=1):
                 messages_column.controls.append(
-                    ft.Text(
-                        f"{index}. {message['text']}"
-                        f"({message['created_at']})"
+                    ft.Row(
+                        [
+                            ft.Text(
+                                f"{message['id']}. {message['text']} "
+                                f"({message['created_at']})",
+                                expand=True
+                            ),
+                            ft.ElevatedButton(
+                                "Usuń",
+                                on_click= lambda e, message_id = message['id']: delete_message(message_id),
+                            ),
+                        ]
                     )
                 )
         except requests.RequestException as error:
@@ -83,6 +92,21 @@ def main(page: ft.Page):
         except requests.RequestException as error:
             status_text.value = f'Błąd zapisu: {error}'
         
+        page.update()
+
+
+    def delete_message(message_id: int) -> None:
+        try:
+            response = requests.delete(
+                f"{API_BASE_URL}/messages/{message_id}",
+                timeout=5
+            )
+            response.raise_for_status()
+
+            status_text.value = f"Usunięto wiadomość ID {message_id}"
+            load_messages()
+        except requests.RequestException as error:
+            status_text.value = f"Bląd usuwania {error}"
         page.update()
 
     page.add(
