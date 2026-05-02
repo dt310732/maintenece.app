@@ -59,6 +59,7 @@ def messages(request: HttpRequest) -> JsonResponse:
         status=405,
     )
 
+@csrf_exempt
 def message_details(request: HttpRequest, message_id: int) -> JsonResponse:
     try:
         message = Message.objects.get(id=message_id)
