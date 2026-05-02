@@ -15,7 +15,8 @@ def main(page: ft.Page):
         label="Wpisz wiadomość",
         autofocus=True,
     )
-
+    edit_id_input = ft.TextField(label="ID do edycji", width=150)
+    edit_text_input = ft.TextField(label="Nowy tekst")
     status_text = ft.Text("")
     messages_column = ft.Column(spacing=8)
 
@@ -111,6 +112,42 @@ def main(page: ft.Page):
         
         page.update()
 
+    def update_message(e):
+        message_id = edit_id_input.value.strip()
+        new_text = edit_text_input.value.strip()
+
+        if not message_id:
+            status_text.value = "Podaj ID wiadomości do edycji."
+            page.update()
+            return
+
+        if not message_id.isdigit():
+            status_text.value = "ID musi być liczbą."
+            page.update()
+            return
+
+        if not new_text:
+            status_text.value = "Podaj nowy tekst."
+            page.update()
+            return
+        
+        try:
+            response = requests.patch(
+                f"{API_BASE_URL}/messages/{message_id}/",
+                json={"text": new_text},
+                timeout=5,
+            )
+            response.raise_for_status()
+
+            status_text.value = f"Zmieniono wiadomość ID {message_id}"
+            edit_id_input.value = ""
+            edit_text_input.value = ""
+            load_messages()
+
+        except requests.RequestException as error:
+            status_text.value = f"Bład edycji {error}"
+        page.update()
+
     page.add(
         ft.Text("Flet → Django API → PostgreSQL", size=24),
         input_text,
@@ -119,6 +156,15 @@ def main(page: ft.Page):
                 ft.ElevatedButton("Wyślij", on_click=send_message),
                 ft.ElevatedButton("Odśwież", on_click=refresh_messages),
                 ft.ElevatedButton("Wyczyść", on_click=clear_input),
+            ]
+        ),
+        ft.Divider(),
+        ft.Text("Edycja wiadomości", size=18),
+        ft.Row(
+            [
+                edit_id_input,
+                edit_text_input,
+                ft.ElevatedButton('Zmień', on_click=update_message),
             ]
         ),
         status_text,
