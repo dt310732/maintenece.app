@@ -19,6 +19,8 @@ def main(page: ft.Page):
     status_text = ft.Text("")
     messages_column = ft.Column(spacing=8)
 
+    
+
     def load_messages():
         messages_column.controls.clear()
 
@@ -37,10 +39,10 @@ def main(page: ft.Page):
                 )
                 return
             
-            for message in messages:
+            for index,message in enumerate(messages, start=1):
                 messages_column.controls.append(
                     ft.Text(
-                        f"{message['id']}. {message['text']}"
+                        f"{index}. {message['text']}"
                         f"({message['created_at']})"
                     )
                 )
