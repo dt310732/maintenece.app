@@ -79,6 +79,36 @@ def message_details(request: HttpRequest, message_id: int) -> JsonResponse:
         }, status = 200,
         )
     
+    if request.method == "PATCH":
+        try:
+            body = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse(
+                {"error": "Invalid JSON"},
+                status=400,
+            )
+        
+        text = body.get("text", "").strip()
+
+        if not text:
+            return JsonResponse(
+                {"error": "Field 'Text' is required"},
+                status=400,
+            )
+        
+        message.text = text
+        message.save()
+
+        return JsonResponse(
+            {
+                "id": message.id,
+                "text": message.text,
+                "created_at": message.created_at.isoformat(),
+                "updated": True,
+            },
+            status = 200,
+        )
+
     return JsonResponse(
         {"erorr": "Method not allowed"},
         status = 405,
