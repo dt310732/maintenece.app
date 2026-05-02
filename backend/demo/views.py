@@ -58,3 +58,27 @@ def messages(request: HttpRequest) -> JsonResponse:
         {"error": "Method not allowed"},
         status=405,
     )
+
+def message_details(request: HttpRequest, message_id: int) -> JsonResponse:
+    try:
+        message = Message.objects.get(id=message_id)
+    except Message.DoesNotExist:
+        return JsonResponse(
+            {"error": "Message not found"},
+            status = 404,
+        )
+
+    if request.method == "DELETE":
+        deleted_id = message.id
+        message.delete()
+
+        return JsonResponse({
+            "deleted": True,
+            "id": deleted_id,
+        }, status = 200,
+        )
+    
+    return JsonResponse(
+        {"erorr": "Method not allowed"},
+        status = 405,
+    )
