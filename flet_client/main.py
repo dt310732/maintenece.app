@@ -107,6 +107,8 @@ def main(page: ft.Page):
             load_messages()
         except requests.RequestException as error:
             status_text.value = f"Bląd usuwania {error}"
+
+        
         page.update()
 
     page.add(

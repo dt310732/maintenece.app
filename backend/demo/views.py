@@ -80,6 +80,7 @@ def message_details(request: HttpRequest, message_id: int) -> JsonResponse:
         )
     
     if request.method == "PATCH":
+        print("RAW BODY:", request.body)
         try:
             body = json.loads(request.body)
         except json.JSONDecodeError:
