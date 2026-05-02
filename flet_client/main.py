@@ -39,7 +39,7 @@ def main(page: ft.Page):
                 )
                 return
             
-            for index,message in enumerate(messages, start=1):
+            for message in messages:
                 messages_column.controls.append(
                     ft.Row(
                         [
