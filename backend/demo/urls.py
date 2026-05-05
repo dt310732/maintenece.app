@@ -3,7 +3,7 @@ from . import views
 from rest_framework.routers import DefaultRouter
 
 rounter = DefaultRouter()
-rounter.register("task", views.TaskViewSet, basename="task")
+rounter.register("tasks", views.TaskViewSet, basename="task")
 
 urlpatterns = [
     path("ping/", views.ping, name="demo-ping"),
