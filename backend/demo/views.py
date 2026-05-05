@@ -1,14 +1,15 @@
 import json
 from django.http import JsonResponse, HttpRequest
 from django.views.decorators.csrf import csrf_exempt
-from .models import Message
+from .models import Message, Task
+from rest_framework import viewsets
+from .serializers import TaskSerializer
 
 def ping(request: HttpRequest) -> JsonResponse:
     return JsonResponse({
         'status': 'ok',
         'app': 'demo'
     })
-
 
 @csrf_exempt
 def messages(request: HttpRequest) -> JsonResponse:
@@ -113,3 +114,8 @@ def message_details(request: HttpRequest, message_id: int) -> JsonResponse:
         {"erorr": "Method not allowed"},
         status = 405,
     )
+
+class TaskViewSet(viewsets.ModelViewSet):
+    queryset = Task.objects.order_by("-created_at")
+    serializer_class = TaskSerializer
+    
